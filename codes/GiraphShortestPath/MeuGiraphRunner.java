@@ -1,4 +1,3 @@
-
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,87 +15,89 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class MeuGiraphRunner implements Tool {
 
-    static {
-	Configuration.addDefaultResource("giraph-site.xml");
-    }
-    
-    private Configuration conf;
+	static {
+		Configuration.addDefaultResource("giraph-site.xml");
+	}
 
-    @Override
-    public Configuration getConf() {
-	return conf;
-    }
+	private Configuration conf;
 
-    @Override
-    public void setConf(Configuration conf) {
-	this.conf = conf;
-    }
+	@Override
+	public Configuration getConf() {
+		return conf;
+	}
 
-    @Override
-    public int run(String[] args) throws Exception {
-	if (null == getConf()) {
-	    conf = new Configuration();
-	}	
-	GiraphConfiguration giraphConf = new GiraphConfiguration(getConf());	
-	CommandLine cmd = ConfigurationUtils.parseArgs(giraphConf, args);
-	if (null == cmd) {
-	    return 0;
+	@Override
+	public void setConf(Configuration conf) {
+		this.conf = conf;
 	}
-	final String vertexClassName = args[0];
-	final String jobName = "Giraph: " + vertexClassName;
-	
-	GiraphJob job = new GiraphJob(giraphConf, jobName);
-	prepareHadoopMRJob(job, cmd);
-	boolean verbose = !cmd.hasOption('q');
-	
-	return job.run(verbose) ? 0 : -1;
-    }
-    
-    private void prepareHadoopMRJob(final GiraphJob job, final CommandLine cmd) throws Exception {
-	if (cmd.hasOption("op")) {
-	    FileOutputFormat.setOutputPath(job.getInternalJob(), new Path(cmd.getOptionValue("op")));
+
+	@Override
+	public int run(String[] args) throws Exception {
+		if (null == getConf()) {
+			conf = new Configuration();
+		}
+		GiraphConfiguration giraphConf = new GiraphConfiguration(getConf());
+		CommandLine cmd = ConfigurationUtils.parseArgs(giraphConf, args);
+
+		if (null == cmd) {
+			return 0;
+		}
+		final String vertexClassName = args[0];
+		final String jobName = "Giraph: " + vertexClassName;
+
+		GiraphJob job = new GiraphJob(giraphConf, jobName);
+		prepareHadoopMRJob(job, cmd);
+		boolean verbose = !cmd.hasOption('q');
+
+		return job.run(verbose) ? 0 : -1;
 	}
-	if (cmd.hasOption("cf")) {
-	    DistributedCache.addCacheFile(new URI(cmd.getOptionValue("cf")), job.getConfiguration());
+
+	private void prepareHadoopMRJob(final GiraphJob job, final CommandLine cmd) throws Exception {
+		if (cmd.hasOption("op")) {
+			FileOutputFormat.setOutputPath(job.getInternalJob(), new Path(cmd.getOptionValue("op")));
+		}
+		if (cmd.hasOption("cf")) {
+			DistributedCache.addCacheFile(new URI(cmd.getOptionValue("cf")), job.getConfiguration());
+		}
 	}
-    }
-    
-    public static void main(String[] args) throws Exception {
-	if (args.length < 2) {
-	    System.out.println("GiraphSSSP Usage: <input_path> <output_path> [number_of_workers (default 1)]");
-	    System.exit(-1);
+
+	public static void main(String[] args) throws Exception {
+		if (args.length < 2) {
+			System.out.println("GiraphSSSP Usage: <input_path> <output_path> [number_of_workers (default 1)]");
+			System.exit(-1);
+		}
+
+		String numberOfWorkers = "1";
+
+		if (args.length == 3) {
+			numberOfWorkers = args[2];
+		}
+
+		String[] newArgs = {
+			"-libjars",
+			"~/GiraphShortestPath/dist/GiraphShortestPath.jar",
+			"ShortestPath",
+			"-vif",
+			"org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat",
+			"-vip",
+			args[0],
+			"-vof",
+			"org.apache.giraph.io.formats.IdWithValueTextOutputFormat",
+			"-op",
+			args[1],
+			"-w",
+			numberOfWorkers
+		};
+
+		System.out.println("Beginning SSSP Giraph job");
+		long start = System.nanoTime();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		System.out.println(dateFormat.format(new Date()));
+
+		ToolRunner.run(new MeuGiraphRunner(), newArgs);
+
+		double elapsedTimeInSec = (System.nanoTime() - start) * 1.0e-9;
+		System.out.println("<" + elapsedTimeInSec + "s> " + dateFormat.format(new Date()));
 	}
-	
-	String numberOfWorkers = "1";
-	
-	if (args.length == 3) {
-	    numberOfWorkers = args[2];
-	}
-	
-	String[] newArgs = {
-	    "-libjars",
-	    "/home/hduser/NetBeansProjects/tayllan/GiraphShortestPath/dist/GiraphShortestPath.jar",
-	    "ShortestPath",
-	    "-vif",
-	    "org.apache.giraph.io.formats.JsonLongDoubleFloatDoubleVertexInputFormat",
-	    "-vip",
-	    args[0],
-	    "-vof",
-	    "org.apache.giraph.io.formats.IdWithValueTextOutputFormat",
-	    "-op",
-	    args[1],
-	    "-w",
-	    numberOfWorkers
-	};
-	
-	System.out.println("Beginning SSSP Giraph job");
-	long start = System.nanoTime();
-	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	System.out.println(dateFormat.format(new Date()));
-	
-	ToolRunner.run(new MeuGiraphRunner(), newArgs);
-	
-	double elapsedTimeInSec = (System.nanoTime() - start) * 1.0e-9;
-        System.out.println("<" + elapsedTimeInSec + "s> " + dateFormat.format(new Date()));
-    }
+
 }

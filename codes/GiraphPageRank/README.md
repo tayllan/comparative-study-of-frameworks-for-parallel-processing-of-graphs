@@ -1,6 +1,6 @@
 # Giraph PageRank
 
-## Expected Input
+## Example of Expected Input
 ```
 [0,0,[[0,0],[2,0],[1,0]]]
 [1,0,[[1,0],[3,0]]]
@@ -15,3 +15,4 @@
 ```
 
 ## Execution Command
+`/usr/local/hadoop1/bin/hadoop jar ~/GiraphPageRank/dist/GiraphPageRank.jar MeuGiraphRunner`

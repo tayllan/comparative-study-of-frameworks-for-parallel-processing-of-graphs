@@ -1,6 +1,6 @@
 # Spark Shortest Path
 
-## Expected Input
+## Example of Expected Input
 ```
 0	1:21 0:0 2:44
 1	1:0 3:89
@@ -15,3 +15,4 @@
 ```
 
 ## Execution Command
+`/usr/local/hama/bin/hama --class ShortestPath ~/SparkShortestPath/dist/SparkShortestPath.jar`

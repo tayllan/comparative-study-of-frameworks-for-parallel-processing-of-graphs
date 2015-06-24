@@ -1,6 +1,6 @@
 # Hadoop PageRank
 
-## Expected Input
+## Example of Expected Input
 ```
 0	0 2 1
 1	1 3
@@ -15,3 +15,4 @@
 ```
 
 ## Execution Command
+`/usr/local/hadoop1/bin/hadoop jar ~/HadoopPageRank/dist/HadoopPageRank.jar Driver`

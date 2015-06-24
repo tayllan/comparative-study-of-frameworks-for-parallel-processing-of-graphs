@@ -1,6 +1,6 @@
 # Giraph Shortest Path
 
-## Expected Input
+## Example of Expected Input
 ```
 [0,0,[[1,21],[0,0],[2,44]]]
 [1,0,[[1,0],[3,89]]]
@@ -15,3 +15,4 @@
 ```
 
 ## Execution Command
+`/usr/local/hadoop1/bin/hadoop jar ~/GiraphShortestPath/dist/GiraphShortestPath.jar MeuGiraphRunner`
