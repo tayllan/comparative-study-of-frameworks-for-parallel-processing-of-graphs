@@ -9,4 +9,4 @@ It also contains some codes used in it:
 * [PageRank](https://github.com/tayllan/my-final-paper/tree/master/codes/HamaPageRank) and [ShortestPath](https://github.com/tayllan/my-final-paper/tree/master/codes/HamaShortestPath) for the [Apache Hama](https://github.com/apache/hama) framework;
 * [PageRank](https://github.com/tayllan/my-final-paper/tree/master/codes/SparkPageRank) and [ShortestPath](https://github.com/tayllan/my-final-paper/tree/master/codes/SparkShortestPath) for the [Apache Spark](https://github.com/apache/spark) framework;
 
-These codes were put here not to be executed "has they are" (too much configuration here and there to run these frameworks), but rather as a reference material.
+These codes were put here not to be executed "has they are" (too much configuration here and there to run these frameworks), but rather as a reference material. If you have any questions, feel free to send me an email at tayllanburigo@gmail.com.
